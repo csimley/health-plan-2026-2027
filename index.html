@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Return to Soccer: Daily Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F2F5F1; --surface:#FFFFFF; --ink:#14211A; --muted:#56665D; --line:#D3DCD5;
+  --train:#2B6A49; --train-soft:#E1EEE6; --food:#2A5B8A; --food-soft:#E2EBF5;
+  --note:#7E520E; --note-soft:#F7ECD6; --p1:#BFD9C8; --p2:#8FBEA2; --p3:#5C9C78; --p4:#2B6A49;
+  box-sizing:border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0E1511; --surface:#161F1A; --ink:#E6EEE8; --muted:#9AAEA2; --line:#2A3830;
+    --train:#6FC798; --train-soft:#1B3125; --food:#86B6E8; --food-soft:#17283A;
+    --note:#E7B45A; --note-soft:#33280F; --p1:#24402F; --p2:#2F5A41; --p3:#3F7F5A; --p4:#6FC798;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0E1511; --surface:#161F1A; --ink:#E6EEE8; --muted:#9AAEA2; --line:#2A3830;
+  --train:#6FC798; --train-soft:#1B3125; --food:#86B6E8; --food-soft:#17283A;
+  --note:#E7B45A; --note-soft:#33280F; --p1:#24402F; --p2:#2F5A41; --p3:#3F7F5A; --p4:#6FC798;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+button:focus-visible,a:focus-visible{outline:3px solid var(--train);outline-offset:2px;border-radius:6px}
+.cond{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+
+.top{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px}
+.brand{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:20px;letter-spacing:.01em}
+.today-btn{font-weight:600;font-size:15px;padding:7px 14px;border-radius:999px;border:1.5px solid var(--ink)}
+.today-btn[disabled]{opacity:.35;cursor:default}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 18px 56px}
+
+.hero{padding:22px 0 14px}
+.hero-date{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(46px,14vw,68px);line-height:.92;letter-spacing:-.005em;margin:0}
+.hero-sub{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:10px;color:var(--muted);font-weight:500}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-weight:600;font-size:14px;background:var(--train-soft);color:var(--train)}
+.pill.food{background:var(--food-soft);color:var(--food)}
+.pill.plain{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+
+.season{margin:6px 0 18px}
+.season-bar{display:grid;grid-template-columns:repeat(21,1fr);gap:3px}
+.seg{height:22px;border-radius:4px;position:relative}
+.seg.p1{background:var(--p1)}.seg.p2{background:var(--p2)}.seg.p3{background:var(--p3)}.seg.p4{background:var(--p4)}
+.seg.cur{outline:2.5px solid var(--ink);outline-offset:1.5px}
+.seg.dl::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:var(--bg)}
+.season-key{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:6px}
+
+.week{display:flex;align-items:stretch;gap:6px;margin-bottom:14px}
+.wk-nav{flex:0 0 34px;display:grid;place-items:center;border-radius:10px;border:1.5px solid var(--line);font-size:18px}
+.wk-nav[disabled]{opacity:.3;cursor:default}
+.days{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 8px;border-radius:12px;background:var(--surface);border:1.5px solid var(--line)}
+.day .dl1{font-size:12px;color:var(--muted);font-weight:600}
+.day .dn{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:22px;line-height:1}
+.day .bar{width:60%;height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:3px}
+.day .bar i{display:block;height:100%;background:var(--train)}
+.day.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.day.sel .dl1{color:var(--bg);opacity:.8}
+.day.sel .bar{background:rgba(127,127,127,.45)}
+.day.sel .bar i{background:var(--bg)}
+.day.today .dn{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+
+.notes{display:grid;gap:8px;margin-bottom:14px}
+.note{background:var(--note-soft);color:var(--ink);border-left:4px solid var(--note);padding:10px 12px;border-radius:0 10px 10px 0;font-size:15px}
+.note b{color:var(--note)}
+
+.progress{display:flex;align-items:center;gap:12px;margin:4px 0 16px}
+.progress .track{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.progress .track i{display:block;height:100%;background:var(--ink);transition:width .25s ease}
+.progress span{font-weight:600;font-size:15px;white-space:nowrap}
+
+.tabs{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 52px);z-index:4;background:var(--bg);display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px 0 10px}
+.tab{padding:10px 0;border-radius:12px;font-weight:600;text-align:center;border:1.5px solid var(--line);background:var(--surface)}
+.tab .cnt{font-weight:500;color:var(--muted);font-size:14px;margin-left:4px}
+.tab.on.t{background:var(--train);border-color:var(--train);color:var(--bg)}
+.tab.on.f{background:var(--food);border-color:var(--food);color:var(--bg)}
+.tab.on .cnt{color:inherit;opacity:.85}
+
+.panel{--accent:var(--train);--accent-soft:var(--train-soft)}
+.panel.food{--accent:var(--food);--accent-soft:var(--food-soft)}
+.session-title{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:30px;line-height:1.05;margin:6px 0 2px}
+.session-meta{color:var(--muted);margin:0 0 6px}
+.targets{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0 6px}
+.t-box{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center}
+.t-box b{display:block;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:21px;line-height:1.1}
+.t-box span{font-size:12px;color:var(--muted)}
+
+.group{margin-top:20px}
+.group h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:21px;margin:0 0 8px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:2px solid var(--accent);padding-bottom:4px}
+.group h3 small{font-family:"Barlow",system-ui,sans-serif;font-weight:500;font-size:14px;color:var(--muted)}
+ul.tasks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.task{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:11px 12px}
+.check{flex:0 0 30px;height:30px;border-radius:9px;border:2px solid var(--muted);display:grid;place-items:center;margin-top:1px}
+.check svg{width:18px;height:18px;opacity:0}
+.task.done .check{background:var(--accent);border-color:var(--accent)}
+.task.done .check svg{opacity:1;color:var(--bg)}
+.task.done .ttl{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.5px}
+.tbody{flex:1;min-width:0}
+.ttl{display:block;width:100%;font-weight:600;line-height:1.3}
+.ttl .chev{float:right;margin-left:8px;color:var(--muted);transition:transform .2s ease;font-weight:500}
+.ttl[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.meta{display:block;color:var(--muted);font-weight:500;font-size:15px;margin-top:2px}
+.detail{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:15px;color:var(--ink)}
+.detail p{margin:0 0 6px}
+.detail ol,.detail ul{margin:0;padding-left:20px}
+.detail li{margin:0 0 5px}
+.detail .mac{display:inline-block;background:var(--accent-soft);color:var(--accent);font-weight:600;border-radius:8px;padding:2px 8px;margin:2px 0 6px}
+.detail a{color:var(--accent);font-weight:600}
+.foot{margin-top:28px;color:var(--muted);font-size:14px}
+.foot a{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <span class="brand">Return to soccer</span>
+    <button class="today-btn" id="todayBtn" type="button">Today</button>
+  </div>
+</header>
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<script>
+(function(){
+  "use strict";
+  var PLAN_URL = "https://claude.ai/code/artifact/de08bca0-eb35-4f2b-a781-9f0b298a82b7";
+  var TOTAL = 147;
+  var DOW = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  var DOW1 = ["M","T","W","T","F","S","S"];
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var PHASE = {1:"Foundation",2:"Build",3:"Power and speed",4:"Soccer-ready"};
+  var DELOAD = {10:1,15:1,21:1};
+
+  /* ---------- dates ---------- */
+  function dateOf(i){var d=new Date(2026,9,19);d.setDate(d.getDate()+i);return d;}
+  function indexOf(d){return Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,9,19))/864e5);}
+  function key(i){var d=dateOf(i);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+  function clamp(i){return Math.max(0,Math.min(TOTAL-1,i));}
+  function weekOf(i){return Math.floor(i/7)+1;}
+  function dowOf(i){return i%7;}
+  function phaseOf(w){return w<=5?1:w<=10?2:w<=15?3:4;}
+  function mealWeek(w){return ((w-1)%4)+1;}
+  function dayType(dow){return dow===6?"rest":(dow===1||dow===2)?"moderate":"hard";}
+  function halve(s){return s.replace(/(\d+)×/g,function(m,n){return Math.max(1,Math.ceil(n/2))+"×";});}
+
+  /* ---------- storage ---------- */
+  var store={};
+  try{store=JSON.parse(localStorage.getItem("rts-daily-v1")||"{}")||{};}catch(e){store={};}
+  function save(){try{localStorage.setItem("rts-daily-v1",JSON.stringify(store));}catch(e){}}
+  function doneSet(i){return new Set(store[key(i)]||[]);}
+  function toggle(i,id){var s=doneSet(i);if(s.has(id))s.delete(id);else s.add(id);store[key(i)]=Array.from(s);save();}
+  var ui={tab:"t"};
+  try{ui.tab=localStorage.getItem("rts-tab")||"t";}catch(e){}
+
+  /* ---------- training content ---------- */
+  var POSTURE=[
+    ["90/90 breathing","5 slow breaths × 3","Feet on the wall, hips and knees at 90°. Tuck your pelvis so your low back is flat. Inhale through your nose, then exhale fully so your ribs drop."],
+    ["Half-kneeling hip flexor stretch","2 × 45 s each side","Tuck your pelvis and squeeze the back glute, then shift your hips slightly forward. Feel it in the front of the back hip."],
+    ["Kneeling heel sit","2 × 60 s","Pillow between your heels and butt. Sit back until your quads stretch, and thin the pillow every 1–2 weeks. Stop if the knee pinches."],
+    ["Prone heel-to-butt with strap","2 × 8 slow reps each side","Lie face down with your hips pressed into the floor and use the strap to pull your heel toward your glute. Keep your hips flat."],
+    ["Knee-to-wall ankle mobility","2 × 10 each side","Toes a few inches from the wall. Drive your knee over your toes to touch the wall while the heel stays flat. Move the foot back as you improve."],
+    ["Banded psoas march","2 × 8 each side, 3 s hold","Band around both feet. Stand tall with ribs down, drive the knee above hip height, hold, and lower slowly."],
+    ["Thoracic extension on the foam roller","2 × 8","Roller under your mid-back, hands behind your head, hips down. Arch back over the roller, then shift up an inch and repeat."],
+    ["Dead bug","2 × 6 each side","Arms up and knees over hips with your low back pressed into the floor. Reach the opposite arm and leg, then return slowly."]
+  ];
+  var LOWER_A=[
+    ["Power",null,"Box jump 3×3","Hang power clean 4×3","Hang power clean 3×2"],
+    ["Squat","Goblet squat to box 3×8","Front or back squat 4×6 (4×5 from Week 8)","Back squat 4×3","Back squat 3×3"],
+    ["Single-leg","Split squat, bodyweight to DB 2×8","Rear-foot elevated split squat 3×8","Rear-foot elevated split squat 3×5 (heavy)","Rear-foot elevated split squat 2×5"],
+    ["Knee strength","Reverse sled drag 4×20 yd (light)","Reverse sled drag 4×20 yd","Reverse sled drag 4×15 yd (heavy)","Reverse sled drag 2×20 yd"],
+    ["Hip flexors","Seated psoas lift 2×8","Hanging knee raise with posterior tilt 3×8","Cable or band hip flexion above 90° 3×8","Cable or band hip flexion 2×8"],
+    ["Lower leg","Tibialis raise 2×15 + bent-knee calf raise 2×15","Tibialis raise 3×12 + single-leg calf raise 3×12","Weighted single-leg calf raise 3×8","Weighted single-leg calf raise 2×10"]
+  ];
+  var LOWER_B=[
+    ["Hinge","Trap bar deadlift 3×5 (RPE 6)","Trap bar deadlift 4×5","Trap bar deadlift 4×3","Trap bar deadlift 3×3"],
+    ["Single-leg hinge","Single-leg RDL 2×8","Single-leg RDL 3×8","Single-leg RDL 3×6","Single-leg RDL 2×6"],
+    ["Glutes","Hip thrust 3×10","Hip thrust 3×8","Hip thrust 3×6","Hip thrust 2×8"],
+    ["Hamstrings","Band-assisted Nordic 2×3","Nordic 3×4","Nordic 3×5","Nordic 2×4"],
+    ["Adductors","Short-lever Copenhagen 2×15 s","Long-lever Copenhagen 3×20 s","Copenhagen reps 3×6 each side","Copenhagen reps 2×6 each side"],
+    ["Lateral","Lateral lunge 2×8","Cossack squat 3×6","Lateral sled drag 3×20 yd",null],
+    ["Core","Pallof press 2×10","Pallof press 3×10","Pallof press 3×10","Pallof press 2×10"]
+  ];
+  function upperRows(p){
+    var big=(p===2||p===3)?4:p===4?2:3, s=p===4?2:3;
+    return [
+      ["Press","Incline DB press "+big+"×8–10"],
+      ["Row","Chest-supported row "+big+"×10"],
+      ["Core press","Half-kneeling landmine press "+s+"×8 each side (ribs down, glute squeezed)"],
+      ["Pull","Pull-up or lat pulldown "+s+"×6–10"],
+      ["Arms","DB curl + overhead DB triceps extension superset "+s+"×10–12"],
+      ["Shoulders","Face pull "+s+"×15"],
+      ["Carry","Farmer or suitcase carry "+s+"×40 yd"],
+      ["Core","Side plank "+s+"×30 s each side"]
+    ];
+  }
+  var RPE={1:"Lifts at RPE 6–7. Leave 3–4 reps in the tank.",2:"Lifts at RPE 7–8.",3:"Main lifts at RPE 8; everything else RPE 7–8.",4:"Lifts at RPE 7–8 with lower volume while soccer volume rises."};
+  var OVERLOAD="When you hit the top of the rep range on every set, add weight next session: 5 lb on lower-body lifts, 2.5–5 lb on upper-body lifts. Log every session so you know what to beat.";
+  var WARMUP="<ol><li><b>Raise:</b> 3–4 min easy bike or jog.</li><li><b>Mobilize:</b> hip flexor stretch, heel sit, and knee-to-wall, shortened.</li><li><b>Activate:</b> glute bridge ×10, banded psoas march ×6 each side, Copenhagen plank ×10 s each side, pogos ×20.</li><li><b>Dynamic:</b> walking lunge with reach, lateral shuffle, carioca, A-skip, then 2 × 20 yd build-ups at 60–80%.</li></ol><p>On lifting days, follow with ramp-up sets of your first lift.</p>";
+  var ZONE2="Easy, conversational pace: about 110–130 bpm, breathing through your nose. If your heart rate climbs above 130, slow down or walk until it drops.";
+  var READY="<p>Rate leg soreness (0–10) and sleep (0–10), and take your resting heart rate before getting up.</p><ul><li><b>Soreness 6+ or it changes how you walk:</b> switch running to the bike, cut lifting sets in half, and skip plyos and sprints.</li><li><b>Resting HR 7+ above your weekly average, or under 6 hours of sleep:</b> do 75% of the session, or swap it for Zone 2 plus the posture routine.</li><li><b>Sharp or one-sided pain</b> (Achilles, hamstring, groin, knee): stop that movement, train around it for 48–72 hours, and see a PT or athletic trainer if it isn’t better.</li><li><b>Feeling great and wanting more:</b> don’t. Bank it. Weeks 3–8 are when returning players get hurt most.</li></ul>";
+
+  function speed(w,p){
+    if(p===1) return ["Speed mechanics","Wall march 3×10 s, A-march and A-skip 3×20 yd, ankling 2×20 yd"];
+    if(p===2){
+      if(w===6) return ["Speed mechanics","Wall march, A-march, A-skip, and ankling. Accelerations start next week."];
+      if(w<=8) return ["Drills + accelerations","Drills, then 6 × 10 yd accelerations at 80–90% with full rest"];
+      return ["Drills + accelerations","Drills, then 6 × 15 yd accelerations at 80–90% with full rest"];
+    }
+    if(p===3) return ["Acceleration + top speed","6 × 20 yd at 95%, light sled sprints 4 × 15 yd"+(w>=12?", and flying 20s × 4 (20 yd build-up + 20 yd at top speed)":"")];
+    return ["Sprints","4–6 × 30 yd all-out + 3 flying 20s. Stop the session if your speed drops."];
+  }
+  function plyo(w,p){
+    if(p===1) return ["Plyometrics","Pogos 3×15, snap-downs 3×5, low box jump with step-down 3×3"];
+    if(p===2) return ["Plyometrics","Mini-hurdle hops 3×5, lateral line hops 3×10, broad jump and stick 3×3"];
+    if(p===3) return ["Plyos + change of direction","Bounds 4×20 yd, lateral bounds 3×5 each side. Deceleration: sprint 10 yd and stop in 3 steps ×4. Cuts at "+(w<=12?"45°":"90°")+", 4 each side at 80%."+(w>=14?" Then 5-10-5 at 80%.":"")];
+    return ["Change of direction","Pro agility at full speed ×4, reactive cuts to a partner’s point or a ball (5 reps of 5 s), and 1v1 shuttles with the ball ×4"];
+  }
+  function run(w){
+    var t={1:"8 × (1 min jog / 1 min walk)",2:"6 × (2 min jog / 1 min walk)",3:"5 × (3 min jog / 1 min walk)",4:"3 × (6 min jog / 1 min walk)",5:"20 min continuous, easy"};
+    if(t[w]) return t[w];
+    if(w<=10){var r={6:10,7:12,8:14,9:16,10:10}[w];return "Tempo: "+r+" × 100 yd at about 70%, walking 50 yd between reps";}
+    if(w<=14) return "Tempo: 2 sets × 10 × 100 yd, 3 min between sets. Run the last 4 reps of each set at 75%.";
+    if(w===15) return "Tempo: 1 set × 10 × 100 yd (deload)";
+    if(w<=20) return "Tempo: 2 × 10 × 100 yd at 75%, then a 15 min easy run";
+    return "Tempo: 1 × 10 × 100 yd at 75%, then a 10 min easy run (taper)";
+  }
+  function cond(w){
+    if(w<=2) return "Bike or Airbike: 6 × (1 min hard / 2 min easy)";
+    if(w<=4) return "Bike or Airbike: 7 × (1 min hard / 2 min easy)";
+    if(w===5) return "Bike or Airbike: 8 × (1 min hard / 2 min easy)";
+    if(w<=7) return "Norwegian 4×4 on the bike: 4 min at 85–95% of max HR (about 155–174 bpm), 3 min easy";
+    if(w<=9) return "Norwegian 4×4 running (field or incline treadmill): 4 min at 85–95% of max HR (about 155–174 bpm), 3 min easy";
+    if(w===10) return "Deload: 2 rounds of 4 min hard / 3 min easy, bike or run";
+    if(w<=12) return "15/15 field intervals: 15 s fast run / 15 s rest for 8 min, 2 sets, 3 min between sets";
+    if(w<=14) return "15/15 field intervals: 15 s fast run / 15 s rest for 8 min, 3 sets, 3 min between sets";
+    if(w===15) return "15/15 field intervals: 1 set of 8 min (deload)";
+    if(w<=17) return "Repeated sprints: 2 sets × 6 × 30 yd all-out, 25 s rest between sprints, 4 min between sets";
+    if(w<=20) return "Repeated sprints: 3 sets × 6 × 30 yd all-out, 25 s rest between sprints, 4 min between sets";
+    return "Repeated sprints: 1 set × 6 × 30 yd (taper)";
+  }
+  var TESTS={
+    "1-0":"Baseline tests: side-view posture photo, side-view run video, Thomas test, kneeling heel sit, and prone heel-to-butt gap",
+    "1-3":"Baseline: broad jump and vertical jump, 3 attempts each, before plyos",
+    "11-0":"Midpoint tests: posture photo, run video, Thomas test, heel sit, heel-to-butt gap, and your first 10-yd dash during speed work",
+    "11-3":"Midpoint: broad jump and vertical jump, before plyos",
+    "13-0":"Get your DXA recheck done this week",
+    "16-3":"First pro agility test, during change-of-direction work",
+    "21-0":"Final tests: posture photo, run video, Thomas test, heel sit, heel-to-butt gap, and 10-yd dash",
+    "21-1":"Get your final DXA scan done this week",
+    "21-3":"Final: broad jump, vertical jump, and pro agility"
+  };
+
+  function training(i){
+    var w=weekOf(i), d=dowOf(i), p=phaseOf(w), dl=!!DELOAD[w], G=[];
+    var morning=[
+      {id:"weigh",t:"Weigh in",m:"After the bathroom, before eating. Same scale, Standard mode.",x:"Track the 7-day average, not single readings."},
+      {id:"ready",t:"Readiness check",m:"Soreness, sleep, resting heart rate",x:READY},
+      {id:"posture",t:"Posture and mobility routine",m:"8 moves, about 15 minutes",x:"<ol>"+POSTURE.map(function(r,k){var extra=(k===1&&w>=4)?" Progress to the couch stretch.":"";return "<li><b>"+r[0]+"</b>, "+r[1]+". "+r[2]+extra+"</li>";}).join("")+"</ol>"}
+    ];
+    G.push({h:"Morning",s:"Every day",items:morning});
+
+    var S={h:"",s:"",items:[]}, test=TESTS[w+"-"+d];
+    function add(id,t,m,x){S.items.push({id:id,t:t,m:m,x:x});}
+    function lifts(rows){rows.forEach(function(r,k){var v=r[p];if(!v)return;add("lift"+k,dl?halve(v):v,r[0],k===0?OVERLOAD:null);});}
+    if(d<6) add("warm","Warm-up","10–12 min",WARMUP);
+    if(test) add("test",test,"Testing","Use your team’s protocols so results compare directly. Record results in the Testing table in your plan.");
+
+    if(d===0){
+      S.h="Lower A + speed";S.s="60–75 min";
+      var sp=speed(w,p);add("speed",sp[1],sp[0]+" before lifting"+(dl?" (deload: half the reps)":""));
+      lifts(LOWER_A);
+      S.note=RPE[p];
+    } else if(d===1){
+      S.h="Aerobic run";S.s="40–60 min";
+      add("run",run(w),"Grass, turf, track, or treadmill","Increase total running time by no more than 10–15% a week.");
+      add("core","Core and posture extras","Dead bug 3×6 each side, side plank 2×30 s each side, Pallof press 2×10 each side");
+    } else if(d===2){
+      S.h="Upper + posture strength";S.s="60–70 min";
+      upperRows(p).forEach(function(r,k){add("up"+k,dl?halve(r[1]):r[1],r[0],k===0?OVERLOAD:null);});
+      add("z2","Zone 2 on the bike or rower",dl?"10–15 min":"20–30 min",ZONE2);
+      S.note=RPE[p];
+    } else if(d===3){
+      S.h="Lower B + plyos";S.s="60–75 min";
+      var pl=plyo(w,p);add("plyo",pl[1],pl[0]+" before lifting"+(dl?" (deload: half the reps)":""));
+      lifts(LOWER_B);
+      S.note=RPE[p]+" The Nordics and Copenhagens are your hamstring and groin protection. Don’t skip them.";
+    } else if(d===4){
+      S.h="Conditioning";S.s="30–45 min";
+      add("cond",cond(w),"Intervals","Estimated max heart rate is about 183 bpm. Hard intervals should feel like a 7–9 out of 10.");
+    } else if(d===5){
+      S.h=p===4?"Soccer":"Long aerobic + ball";S.s=p===4?"60–90 min":"45–90 min";
+      if(w===1) add("cooper","Baseline: Cooper 12-min run at a hard, controlled effort","Replaces Zone 2 today","Run or run-walk as far as you can in 12 minutes on a measured track. Finish with 10 min easy on the bike.");
+      else if(w===11) add("cooper","Midpoint: Cooper 12-min run","Replaces Zone 2 today","Same track and protocol as Week 1. Finish with 10 min easy.");
+      else if(w===21) add("cooper","Final: Cooper 12-min run","Replaces the long session","Same track and protocol as Week 1, then easy ball touches.");
+      if((p===2||p===3)&&w!==11) add("circ","Upper-body circuit",(dl?"2":"3")+" rounds, about 15 min","Push-ups, inverted rows, and DB curls, 10–12 reps each, before Zone 2.");
+      if(p===1&&w!==1){add("z2","Zone 2: bike or incline walk","30–40 min",ZONE2);add("ball","Ball touches","15 min of juggling and wall passes");}
+      if(p===2){add("z2","Zone 2: mix running and bike",w===10?"25 min (deload)":"40–50 min",ZONE2);add("ball","Ball work","20 min");}
+      if(p===3&&w!==11){add("z2","Zone 2",w===15?"30 min (deload)":"50–60 min",ZONE2);add("ball","Ball work","20 min. Futsal or rondos if available.");}
+      if(w===11) add("ball","Ball work","20 min");
+      if(p===4&&w!==21) add("play","Pickup soccer, futsal, or small-sided games","60–90 min","This is the real test. Full warm-up first, every time.");
+      if(w===1) add("ball","Ball touches","15 min of juggling and wall passes");
+    } else {
+      S.h="Rest day";S.s="Recover";
+      add("walk","Easy walk","15–30 min");
+      add("log","Weekly log","7-day average weight, waist at the navel, and average soreness","Enter it in the Weekly Log table in your plan.");
+    }
+    G.push(S);
+    return {groups:G};
+  }
+
+  /* ---------- nutrition content ---------- */
+  var OATS={
+    1:["Berry-walnut","¾ cup (60 g) rolled oats, 1 cup plain nonfat Greek yogurt, ½ cup unsweetened soy milk, 1 tbsp ground flaxseed, 1 cup berries, ½ oz walnuts, cinnamon"],
+    2:["Banana-walnut","The usual jar with ½ a sliced banana instead of berries, plus extra cinnamon"],
+    3:["Apple-cinnamon","The usual jar with ½ a diced apple instead of berries"],
+    4:["Cherry-cocoa","The usual jar with 1 cup frozen cherries instead of berries, plus 1 tbsp cocoa powder"]
+  };
+  var FREEZER={1:"freezer breakfast burritos",2:"egg and cheese English muffin sandwiches",3:"egg muffin cups",4:"sweet potato and black bean burritos"};
+  function Dn(n,prep,plate,mac,cal,method,crock,when){return {n:n,prep:prep,plate:plate,mac:mac,cal:cal,method:method,crock:crock||null,when:when||"lunch"};}
+  var DIN={
+    1:[
+      Dn("Crockpot honey-garlic chicken over brown rice, green beans","Crockpot at lunch (10 min); rice and beans at dinner (10 min)","6 oz chicken, 1 cup brown rice, 1 cup green beans","60 P / 6 F / 61 C","~540","Cook 2 cups quick-cook brown rice (enough for Tuesday too). Shred the chicken, thicken the sauce on the stove with 1 tbsp cornstarch in 2 tbsp cold water, and microwave the green beans.","Chicken breasts + ⅓ cup honey, ¼ cup low-sodium soy sauce, 1 tbsp cider vinegar, 4 garlic cloves, chopped onion, ½ tsp ginger. LOW 4–5 hours."),
+      Dn("Salmon burrito bowls","15 min in the oven; reuse Monday’s rice","6 oz salmon, ¾ cup brown rice, ½ cup black beans, ½ cup corn","51 P / 20 F / 69 C","~660","Rub the salmon with chili powder, cumin, garlic powder, smoked paprika, and salt. Bake at 400°F for 12–15 min, until it flakes. Warm the beans and corn with cumin, reheat the rice, and finish with lime."),
+      Dn("Sheet-pan pork tenderloin, sweet potatoes, Brussels sprouts","10 min prep, 25 min in the oven","6 oz pork, 250 g sweet potato, 1 cup sprouts","53 P / 16 F / 64 C","~600","Roast cubed sweet potatoes and halved sprouts at 425°F for 10 min. Season the tenderloin with the honey-mustard glaze or the smoky chili-lime rub, add it to the pan, and roast 18–22 min more, to 145°F. Rest 5 min and slice."),
+      Dn("Crockpot BBQ pulled chicken sandwiches, potato wedges, peas and carrots","Crockpot at lunch (5 min); 15 min at dinner","5 oz chicken, 1 whole-wheat bun, 2 tbsp BBQ sauce, 150 g wedges, 1 cup peas and carrots","59 P / 9 F / 85 C","~670","Roast skin-on potato wedges at 425°F for 25–30 min. Shred the chicken, keep ¼ cup of the liquid, and stir in BBQ sauce. Microwave the peas and carrots and toast the buns.","Chicken breasts + 1 cup low-sodium broth, chopped onion, garlic, smoked paprika, garlic powder, pepper. LOW 4–5 hours."),
+      Dn("Crockpot Mongolian beef over whole-wheat spaghetti","Crockpot at lunch (15 min); noodles at dinner (10 min)","5 oz beef, 1 cup spaghetti, 2 tbsp sauce, 1 cup carrots and green beans","55 P / 13 F / 65 C","~600","Boil 12 oz whole-wheat spaghetti for 9–10 min and toss it with some of the sauce. Microwave the carrots and green beans.","Flank steak sliced thin against the grain and tossed in 2 tbsp cornstarch, + ½ cup low-sodium soy sauce, ⅓ cup honey, ½ cup water, 4 garlic cloves, ½ tsp ginger, 1 tsp sesame oil, sliced onion. LOW 4–5 hours."),
+      Dn("Lemon-garlic baked cod, smashed potatoes, roasted asparagus","About 35 min","7 oz cod, 300 g smashed potatoes, 1 cup asparagus","54 P / 11 F / 58 C","~550","Simmer skin-on potatoes and garlic 15–18 min. Brush the cod with olive oil, garlic, lemon zest, paprika, and salt, and bake with the asparagus at 400°F for 12–15 min. Mash the potatoes with olive oil and lactose-free milk or cooking water."),
+      Dn("Crockpot pork carnitas tacos, pinto beans, roasted zucchini and eggplant","Crockpot in the morning (10 min); 25 min at dinner","5 oz pork, 2 corn tortillas, ½ cup pintos, 1 cup vegetables, ½ oz cheese","54 P / 19 F / 52 C","~590","Roast cubed zucchini and eggplant at 425°F for 25–30 min. Shred the pork (broil it 3–5 min to crisp, optional), warm the beans and tortillas, and build the tacos.","Pork loin rubbed with cumin, chili powder, oregano, garlic powder, salt, and pepper, on chopped onion and garlic, with 1 cup broth and the juice of 1 orange and 1 lime. LOW 6–7 hours.","morning")
+    ],
+    2:[
+      Dn("Crockpot teriyaki pineapple chicken over rice, peas","Crockpot at lunch (10 min); rice and peas at dinner","5 oz chicken, 1 cup brown rice, ½ cup pineapple, ½ cup peas","53 P / 5 F / 76 C","~565","Cook 3 cups quick-cook brown rice (covers Tuesday). Slice or shred the chicken and microwave the peas.","Chicken breasts + 1 can pineapple chunks with juice, ½ cup teriyaki sauce, garlic, ½ tsp ground ginger. LOW 4–5 hours."),
+      Dn("Pork fried rice with egg, peas, carrots, and corn","20-min skillet; uses Monday’s rice","5 oz pork, 1 cup fried rice with ½ egg, ½ cup vegetables","49 P / 16 F / 61 C","~585","Stir-fry diced pork chops in 1 tbsp oil for 5–6 min. Push aside and scramble 3 eggs, then add peas and carrots, corn, the cold rice, 3 tbsp low-sodium soy sauce, 1 tsp sesame oil, and garlic."),
+      Dn("Sheet-pan lemon-herb salmon bites, baby potatoes, asparagus","10 min prep, 25 min in the oven","6 oz salmon, 300 g potatoes, 1 cup asparagus","47 P / 23 F / 58 C","~630","Microwave halved potatoes 5 min, toss with oil, garlic, salt, and paprika, and roast at 425°F for 15 min. Add salmon cubes tossed with lemon zest, Italian seasoning, and salt, plus the asparagus, and roast 6–8 min more. Finish with lemon."),
+      Dn("Crockpot French dip sandwiches, oven fries","Crockpot at lunch (10 min); 10 min at dinner","5 oz beef, 1 hoagie roll, ½ oz provolone, 150 g fries, ¼ cup juices","58 P / 20 F / 67 C","~680","Bake oven fries at 425°F for 30 min. Slice the beef thin, pile it on toasted rolls with provolone, broil 2 min, and serve with the juices for dipping.","Bottom round + sliced onion, 2 cups beef broth, 1 tbsp Worcestershire, garlic, thyme. LOW 6 hours."),
+      Dn("Crockpot white chicken chili","Crockpot at lunch (10 min); 5 min at dinner","5 oz chicken, ¾ cup white beans, ½ cup corn, ½ oz cheese, ½ oz tortilla chips","62 P / 14 F / 55 C","~595","Shred the chicken and mash ½ cup of the beans into the chili to thicken it. Top with cheddar and a few crushed tortilla chips.","Chicken breasts + 2 drained cans great northern beans, 1 cup corn, 2 small cans green chiles, onion, garlic, cumin, oregano, 2 cups broth. LOW 4–5 hours."),
+      Dn("Crispy cod sandwiches, sweet potato fries, corn on the cob","About 35 min","7 oz cod, 1 whole-wheat bun, 150 g sweet potato fries, 1 ear corn","58 P / 13 F / 84 C","~685","Start the sweet potato fries at 425°F (25–30 min). Dip cod pieces in egg white, then in panko with paprika, garlic powder, and salt, and bake on a rack at 425°F for 12–15 min. Boil the corn 5 min."),
+      Dn("Roast chicken with potatoes, carrots, and onion","15 min prep, 90 min in the oven","6 oz chicken (skin off), 250 g potatoes, 1 cup carrots","56 P / 17 F / 55 C","~600","Rub a 5 lb chicken with olive oil, lemon, garlic, and thyme. Roast it on chunked potatoes, carrots, and onion at 425°F for 75–90 min, to 165°F in the thigh. Rest 15 min before carving.")
+    ],
+    3:[
+      Dn("Crockpot beef barbacoa bowls","Crockpot at lunch (10 min); rice at dinner","5 oz beef, ¾ cup brown rice, ½ cup black beans, ½ cup corn, ½ oz cheese","57 P / 16 F / 69 C","~650","Shred the beef into its juices, cook 2 cups quick-cook brown rice, and warm the beans and corn.","Bottom round rubbed with cumin, oregano, chipotle powder, garlic, salt, and pepper + chopped onion, juice of 2 limes, 1 cup beef broth. LOW 6 hours."),
+      Dn("Blackened fish tacos with black beans and corn","15 min stovetop","7 oz fish, 3 corn tortillas, ½ cup black beans, ½ cup corn","58 P / 11 F / 68 C","~600","Coat cod or tilapia with 2 tsp smoked paprika, 1 tsp each garlic powder, onion powder, and cumin, ½ tsp oregano, and ½ tsp salt. Sear in 1 tbsp olive oil 3–4 min per side. Warm the beans, corn, and tortillas, and finish with lime."),
+      Dn("Sheet-pan pork chops with apples, sweet potatoes, Brussels sprouts","10 min prep, 25 min in the oven","6 oz pork chop, 200 g sweet potato, ½ apple, 1 cup sprouts","54 P / 15 F / 60 C","~590","Roast the sweet potatoes and sprouts with oil, salt, and cinnamon at 425°F for 10 min. Add the seasoned chops and sliced apples and roast 15 min more, to 145°F."),
+      Dn("Crockpot chicken noodle soup","Crockpot at lunch (10 min); noodles at dinner (10 min)","6 oz chicken, 1¼ cups whole-wheat noodles, 1 cup carrots, peas, and onion","66 P / 9 F / 65 C","~605","Shred the chicken and stir in frozen peas. Boil the noodles separately for 8 min and add them to each bowl so leftovers don’t get mushy.","Chicken breasts + sliced carrots, onion, garlic, thyme, 8 cups low-sodium chicken broth. LOW 4–5 hours."),
+      Dn("Crockpot BBQ pulled pork sandwiches, corn on the cob, green beans","Crockpot at lunch (10 min); 5 min at dinner","6 oz pork loin, 1 bun, 2 tbsp BBQ sauce, 1 ear corn, 1 cup green beans","57 P / 11 F / 69 C","~600","Shred the pork, drain most of the liquid, and stir in BBQ sauce. Boil the corn and microwave the green beans.","Pork loin + onion, garlic, smoked paprika, 1 cup chicken broth. LOW 6 hours."),
+      Dn("Meatloaf, mashed potatoes, roasted asparagus","15 min prep, 60 min in the oven","6 oz meatloaf, 300 g mashed potatoes, 1 cup asparagus","55 P / 21 F / 69 C","~685","Mix 2 lb 93/7 beef with 1 egg, ½ cup oats, onion, garlic, and Worcestershire. Brush with BBQ sauce and bake at 375°F for 55–60 min, to 160°F. Mash skin-on potatoes with olive oil and lactose-free milk or broth. Roast the asparagus for the last 12 min."),
+      Dn("Honey-garlic baked salmon, brown rice, peas, roasted carrots","10 min prep, 25 min in the oven","6 oz salmon, ¾ cup brown rice, ½ cup peas, 1 cup roasted carrots","47 P / 22 F / 65 C","~650","Cook 2 cups quick-cook brown rice. Roast sliced carrots at 400°F for 10 min, then add the salmon brushed with 2 tbsp honey, 2 tbsp low-sodium soy sauce, and garlic, and roast 12–15 min more. Microwave the peas.")
+    ],
+    4:[
+      Dn("Crockpot garlic-herb pork chops and potatoes, green beans","Crockpot at lunch (10 min); 5 min gravy at dinner","6 oz pork chop, 250 g potatoes, 2 tbsp gravy, 1 cup green beans","55 P / 12 F / 56 C","~550","Whisk 1 tbsp cornstarch into the juices on the stove for a quick gravy. Microwave the green beans.","Quartered yellow potatoes and onion on the bottom; thick-cut boneless chops seasoned with garlic, thyme, rosemary, salt, and pepper on top; 1 cup broth. LOW 5 hours."),
+      Dn("Soy-honey salmon rice bowls with edamame and carrots","20 min in the oven","6 oz salmon, ¾ cup brown rice, ½ cup edamame, ½ cup carrots","51 P / 23 F / 55 C","~635","Cook 2 cups quick-cook brown rice. Whisk ¼ cup low-sodium soy sauce, 2 tbsp honey, 1 tsp sesame oil, garlic, and ½ tsp ginger; brush half on the salmon and bake at 400°F for 12–15 min. Microwave the edamame and sliced carrots, and drizzle the rest of the sauce over the bowls."),
+      Dn("Garlic-parmesan chicken pasta with zucchini and peas","25 min stovetop","5 oz chicken, 1¼ cups whole-wheat pasta, 1 cup zucchini and peas, ½ oz parmesan","63 P / 16 F / 67 C","~660","Cook 1 lb whole-wheat pasta and save 1 cup of the water. Sear bite-size chicken in 1 tbsp oil. Sauté zucchini and garlic, then add peas, ½ cup lactose-free milk, ½ cup pasta water, and ⅓ cup parmesan. Toss with the pasta and chicken."),
+      Dn("Crockpot beef stew with crusty bread","Crockpot at lunch (15 min); 5 min at dinner","5 oz beef, 200 g potatoes, 1 cup carrots and peas, 1 slice bread","56 P / 15 F / 70 C","~640","Stir in frozen peas for 5 min and slice the bread.","Bottom round or eye of round cubes tossed in 2 tbsp flour + cubed potatoes, carrots, onion, garlic, thyme, 1 tbsp Worcestershire, 3 cups beef broth. HIGH 5–6 hours."),
+      Dn("Crockpot cumin-lime chicken tacos","Crockpot at lunch (10 min); 10 min at dinner","5 oz chicken, 2 whole-wheat tortillas, ½ cup black beans, ¼ cup corn, ½ oz cheese","61 P / 15 F / 66 C","~645","Shred the chicken and warm the beans, corn, and tortillas.","Chicken breasts + cumin, chili powder, garlic, chopped onion, juice of 2 limes, ½ cup broth. LOW 4–5 hours."),
+      Dn("Parmesan-crusted tilapia, sweet potato fries, corn on the cob","About 35 min","7 oz tilapia, 150 g sweet potato fries, 1 ear corn","61 P / 13 F / 57 C","~590","Start the sweet potato fries at 425°F (25–30 min). Brush the tilapia with egg white, press on panko, parmesan, garlic powder, and paprika, and bake at 425°F for 10–12 min. Boil the corn 5 min."),
+      Dn("Pork loin roast with apples, onions, potatoes, and carrots","15 min prep, 60 min in the oven","6 oz pork, 200 g potatoes, 1 cup carrots, roasted apple and onion","52 P / 13 F / 61 C","~570","Rub the loin with garlic, thyme, rosemary, salt, and pepper. Roast at 400°F surrounded by chunked potatoes, carrots, sliced apples, and onion for 50–60 min, to 145°F. Rest 10 min.")
+    ]
+  };
+  var THAW={
+    1:{0:[["am","Move Tuesday’s salmon to the fridge"]],1:[["pm","Move Thursday’s chicken to the fridge"]],2:[["pm","Move Friday’s flank steak to the fridge"]],4:[["am","Move Saturday’s cod to the fridge"]]},
+    2:{1:[["am","Move Wednesday’s salmon to the fridge"],["pm","Move Thursday’s roast to the fridge"]],2:[["pm","Move Friday’s chicken to the fridge"]],4:[["am","Move Saturday’s cod to the fridge"]]},
+    3:{0:[["am","Move Tuesday’s fish to the fridge"]],1:[["pm","Move Thursday’s chicken to the fridge"]],2:[["pm","Move Friday’s pork loin to the fridge"]],5:[["am","Move Sunday’s salmon to the fridge"]]},
+    4:{0:[["am","Move Tuesday’s salmon to the fridge"]],1:[["pm","Move Thursday’s stew meat to the fridge"]],2:[["pm","Move Friday’s chicken to the fridge"]],4:[["am","Move Saturday’s tilapia to the fridge"]]}
+  };
+  function dinnerHtml(D){
+    return "<span class=\"mac\">"+D.mac+", "+D.cal+" cal</span><p><b>Prep:</b> "+D.prep+"</p><p><b>Your plate:</b> "+D.plate+". Pack the same for tomorrow’s lunch.</p>"+(D.crock?"<p><b>Crockpot:</b> "+D.crock+"</p>":"")+"<p><b>Tonight:</b> "+D.method+"</p><p><a href=\""+PLAN_URL+"\" target=\"_blank\" rel=\"noopener\">Full recipes and grocery lists</a></p>";
+  }
+  function targets(w,dt){
+    var maint=(w===10||w>=18);
+    var T={hard:["2,425","185–195","~60","~280","45–50"],moderate:["2,330","185–195","~60","~255","45–50"],rest:["2,235","~185","~58","~235","~40"]}[dt];
+    if(maint){var add={hard:"2,700",moderate:"2,600",rest:"2,500"}[dt];var c={hard:"~350",moderate:"~320",rest:"~300"}[dt];T=[add,T[1],T[2],c,T[4]];}
+    return {v:T,maint:maint};
+  }
+
+  function nutrition(i){
+    var w=weekOf(i), d=dowOf(i), mw=mealWeek(w), dt=dayType(d), D=DIN[mw][d], G=[];
+    var prevI=i-1, prev=prevI>=0?DIN[mealWeek(weekOf(prevI))][dowOf(prevI)]:null;
+    var th=(THAW[mw][d]||[]);
+    var am=[], mid=[], aft=[], eve=[];
+    am.push({id:"oats",t:"Breakfast: "+OATS[mw][0].toLowerCase()+" overnight oats",m:"39 P / 18 F / 74 C, 13 g fiber, ~615 cal",x:"<p>"+OATS[mw][1]+".</p><p>Optional: swap in "+FREEZER[mw]+" up to twice a week.</p>"});
+    am.push({id:"creat",t:"Creatine",m:"3–5 g, any time of day"});
+    th.forEach(function(x,k){if(x[0]==="am")am.push({id:"thaw"+k,t:x[1],m:"This morning"});});
+    if(D.crock&&D.when==="morning") am.push({id:"crock",t:"Start the crockpot by 10 am",m:"For tonight’s dinner",x:"<p>"+D.crock+"</p>"});
+
+    mid.push({id:"lunch",t:prev?"Lunch: leftover "+prev.n.replace(/^Crockpot /,"").replace(/^./,function(c){return c.toLowerCase();}):"Lunch: lean protein, starch, and vegetables",m:prev?prev.plate:"5–6 oz lean protein, 1 cup starch, vegetables",x:prev?"<span class=\"mac\">"+prev.mac+", "+prev.cal+" cal</span>":null});
+    mid.push({id:"almond",t:"½ oz almonds with lunch",m:"About 12 almonds"});
+    if(D.crock&&D.when==="lunch") mid.push({id:"crock",t:"Start the crockpot at lunch",m:"For tonight’s dinner",x:"<p>"+D.crock+"</p>"});
+
+    aft.push({id:"snack",t:dt==="rest"?"1 cup shelled edamame":"Pre-training snack: 1 cup shelled edamame + an apple",m:dt==="rest"?"18 P / 8 F / 14 C. Skip the apple on your rest day.":"18 P / 8 F / 39 C, 12 g fiber",x:"Your main soy protein for the day. Microwave 2 min or eat it thawed and cold."});
+    if(dt==="hard") aft.push({id:"fruit",t:"Extra fruit: a pear or orange",m:"Hard training day"});
+
+    eve.push({id:"dinner",t:"Dinner: "+D.n,m:D.plate,x:dinnerHtml(D)});
+    eve.push({id:"yog",t:"Evening: Greek yogurt bowl",m:"1 cup plain nonfat Greek yogurt + ½ cup berries + 1 tbsp chia seeds",x:"25 P / 4 F / 19 C, 6 g fiber, ~210 cal"});
+    th.forEach(function(x,k){if(x[0]==="pm")eve.push({id:"thawp"+k,t:x[1],m:"Tonight"});});
+    if(d===3) eve.push({id:"jars",t:"Make 3 overnight oats jars for Friday through Sunday",m:OATS[mw][0]+" this week"});
+
+    G.push({h:"Morning",items:am});
+    G.push({h:"Midday",items:mid});
+    G.push({h:"Afternoon",items:aft});
+    G.push({h:"Evening",items:eve});
+    G.push({h:"All day",items:[
+      {id:"water",t:"Water: about 80 oz",m:(d===4||(d===5&&phaseOf(w)===4))?"Add electrolytes today":"Half your bodyweight in ounces"},
+      {id:"rules",t:"Heart-health rules",m:"Under 13 g saturated fat, 45–50 g fiber, cheese ½ oz max",x:"<ul><li>Cook with olive oil, not butter.</li><li>Nonfat Greek yogurt only.</li><li>Raise fiber gradually and drink more water as you do.</li><li>Ask your doctor about plant sterols (about 2 g a day).</li></ul>"},
+      {id:"sleep",t:"Sleep 7–8 hours",m:"Short sleep raises hunger and costs muscle"}
+    ]});
+
+    if(d===5&&i<TOTAL-1){var nw=mealWeek(w+1);G.push({h:"Shopping",items:[{id:"shop",t:"Shop for next week’s groceries",m:"Meal plan Week "+nw,x:"<p><a href=\""+PLAN_URL+"\" target=\"_blank\" rel=\"noopener\">Open the Week "+nw+" grocery list</a></p>"}]});}
+    if(d===6&&i<TOTAL-1){
+      var nmw=mealWeek(w+1);
+      G.push({h:"Sunday prep",s:"About 60 min",items:[
+        {id:"p-oats",t:"Make 4 overnight oats jars for Monday through Thursday",m:OATS[nmw][0]+" next week"},
+        {id:"p-eda",t:"Portion edamame into 1-cup containers",m:"7 portions for the week"},
+        {id:"p-chop",t:"Chop 2 onions finely and mince a head of garlic",m:"For the week’s dinners"},
+        {id:"p-nuts",t:"Wash berries, bag almonds in ½ oz portions, chop walnuts",m:"For oats and lunches"},
+        {id:"p-frz",t:"Optional: make "+FREEZER[nmw],m:"For up to 2 breakfasts a week"},
+        {id:"p-thaw",t:"Freeze next week’s meat and fish except Monday’s",m:"Follow the thaw reminders each day"}
+      ]});
+    }
+    return {groups:G,targets:targets(w,dt),dt:dt,dinner:D};
+  }
+
+  function notesFor(i){
+    var w=weekOf(i), p=phaseOf(w), out=[];
+    if(w===10) out.push("<b>Deload and diet break.</b> Half the sets at the same weights and about half the running. Eat at maintenance, about 2,600 calories, by adding carbs. Take it even if you feel fine.");
+    else if(w===15) out.push("<b>Deload week.</b> Half the sets at the same weights and about half the running and conditioning. Take it even if you feel fine.");
+    else if(w===21) out.push("<b>Taper and final testing.</b> Half the sets, sharp but short sessions, and your final tests.");
+    if(w===6) out.push("<b>Thanksgiving week.</b> If plans cut into your sessions, drop Friday’s intervals first and keep both lower-body days.");
+    if(w===16||w===17) out.push("<b>Fuel for soccer.</b> Once your 7-day average reaches 158–160 lb, move up to maintenance (about 2,600 calories) by adding carbs. By Week 18 at the latest.");
+    if(w>=18&&w!==21) out.push("<b>Maintenance calories.</b> You’re fueling for soccer now, so targets are about 2,600 a day. Keep protein and the heart-health rules the same.");
+    if(w>=3&&w<=8) out.push("<b>Careful zone.</b> Weeks 3–8 are when returning players most often get hurt. Feeling great is a reason to bank it, not add more.");
+    return out;
+  }
+
+  /* ---------- render ---------- */
+  var app=document.getElementById("app");
+  var cur=clamp(indexOf(new Date()));
+  var todayI=indexOf(new Date());
+
+  function allTasks(i){
+    var t=training(i), n=nutrition(i), a=[];
+    t.groups.forEach(function(g){g.items.forEach(function(x){a.push("t-"+x.id);});});
+    n.groups.forEach(function(g){g.items.forEach(function(x){a.push("n-"+x.id);});});
+    return a;
+  }
+  function frac(i){var a=allTasks(i), s=doneSet(i), c=0;a.forEach(function(x){if(s.has(x))c++;});return [c,a.length];}
+
+  var CHECK="<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg>";
+  var open={};
+
+  function taskHtml(i,pre,x,set){
+    var id=pre+x.id, done=set.has(id), ek=key(i)+"|"+id, isOpen=!!open[ek];
+    var title=x.x?"<button type=\"button\" class=\"ttl\" data-expand=\""+id+"\" aria-expanded=\""+isOpen+"\"><span class=\"chev\" aria-hidden=\"true\">›</span>"+x.t+(x.m?"<span class=\"meta\">"+x.m+"</span>":"")+"</button>":"<button type=\"button\" class=\"ttl\" data-task=\""+id+"\">"+x.t+(x.m?"<span class=\"meta\">"+x.m+"</span>":"")+"</button>";
+    var det=x.x?"<div class=\"detail\""+(isOpen?"":" hidden")+">"+(x.x.charAt(0)==="<"?x.x:"<p>"+x.x+"</p>")+"</div>":"";
+    return "<li class=\"task"+(done?" done":"")+"\"><button type=\"button\" class=\"check\" data-task=\""+id+"\" aria-pressed=\""+done+"\" aria-label=\""+(done?"Mark not done: ":"Mark done: ")+x.t.replace(/<[^>]+>/g,"").replace(/"/g,"")+"\">"+CHECK+"</button><div class=\"tbody\">"+title+det+"</div></li>";
+  }
+
+  function render(){
+    var i=cur, d=dateOf(i), w=weekOf(i), dw=dowOf(i), p=phaseOf(w), set=doneSet(i);
+    var T=training(i), N=nutrition(i);
+    var h="";
+    h+="<section class=\"hero\"><h1 class=\"hero-date\">"+DOW[dw]+"<br>"+MON[d.getMonth()]+" "+d.getDate()+"</h1>";
+    h+="<div class=\"hero-sub\"><span>Week "+w+" of 21</span><span class=\"pill\">"+PHASE[p]+"</span><span class=\"pill food\">"+(N.targets.maint?"Maintenance":N.dt==="hard"?"Hard day":N.dt==="moderate"?"Moderate day":"Rest day")+"</span>"+(DELOAD[w]?"<span class=\"pill plain\">Deload</span>":"")+"</div></section>";
+
+    h+="<div class=\"season\" role=\"group\" aria-label=\"21-week season\"><div class=\"season-bar\">";
+    for(var k=1;k<=21;k++){h+="<button type=\"button\" class=\"seg p"+phaseOf(k)+(k===w?" cur":"")+(DELOAD[k]?" dl":"")+"\" data-week=\""+k+"\" aria-label=\"Week "+k+", "+PHASE[phaseOf(k)]+(DELOAD[k]?", deload":"")+"\"></button>";}
+    h+="</div><div class=\"season-key\"><span>Oct 19</span><span>Phases 1–4</span><span>Mar 14</span></div></div>";
+
+    var ws=(w-1)*7;
+    h+="<div class=\"week\"><button type=\"button\" class=\"wk-nav\" data-week=\""+(w-1)+"\" aria-label=\"Previous week\""+(w===1?" disabled":"")+">‹</button><div class=\"days\">";
+    for(var j=0;j<7;j++){var di=ws+j, dd=dateOf(di), f=frac(di), pct=f[1]?Math.round(100*f[0]/f[1]):0;
+      h+="<button type=\"button\" class=\"day"+(di===i?" sel":"")+(di===todayI?" today":"")+"\" data-day=\""+di+"\" aria-label=\""+DOW[j]+" "+MON[dd.getMonth()]+" "+dd.getDate()+", "+f[0]+" of "+f[1]+" done\"><span class=\"dl1\">"+DOW1[j]+"</span><span class=\"dn\">"+dd.getDate()+"</span><span class=\"bar\"><i style=\"width:"+pct+"%\"></i></span></button>";}
+    h+="</div><button type=\"button\" class=\"wk-nav\" data-week=\""+(w+1)+"\" aria-label=\"Next week\""+(w===21?" disabled":"")+">›</button></div>";
+
+    var notes=notesFor(i);
+    if(todayI<0&&i===0) notes.unshift("<b>The plan starts Monday, October 19.</b> Here’s your first day.");
+    if(todayI>=TOTAL&&i===TOTAL-1) notes.unshift("<b>You finished the 21 weeks.</b> Time to book your final DXA and get on the field.");
+    if(notes.length) h+="<div class=\"notes\">"+notes.map(function(n){return "<div class=\"note\">"+n+"</div>";}).join("")+"</div>";
+
+    var f0=frac(i), tc=0, tt=0, nc=0, nt=0;
+    T.groups.forEach(function(g){g.items.forEach(function(x){tt++;if(set.has("t-"+x.id))tc++;});});
+    N.groups.forEach(function(g){g.items.forEach(function(x){nt++;if(set.has("n-"+x.id))nc++;});});
+    h+="<div class=\"progress\"><div class=\"track\"><i style=\"width:"+(f0[1]?Math.round(100*f0[0]/f0[1]):0)+"%\"></i></div><span>"+f0[0]+" of "+f0[1]+" done</span></div>";
+
+    h+="<div class=\"tabs\" role=\"tablist\"><button type=\"button\" role=\"tab\" class=\"tab t"+(ui.tab==="t"?" on":"")+"\" data-tab=\"t\" aria-selected=\""+(ui.tab==="t")+"\">Training<span class=\"cnt\">"+tc+"/"+tt+"</span></button><button type=\"button\" role=\"tab\" class=\"tab f"+(ui.tab==="f"?" on":"")+"\" data-tab=\"f\" aria-selected=\""+(ui.tab==="f")+"\">Nutrition<span class=\"cnt\">"+nc+"/"+nt+"</span></button></div>";
+
+    if(ui.tab==="t"){
+      var S=T.groups[1];
+      h+="<section class=\"panel\" role=\"tabpanel\"><h2 class=\"session-title\">"+S.h+"</h2><p class=\"session-meta\">"+S.s+(S.note?". "+S.note:"")+"</p>";
+      T.groups.forEach(function(g,gi){
+        h+="<div class=\"group\"><h3>"+(gi===0?g.h:"Session")+"<small>"+(gi===0?g.s:S.s)+"</small></h3><ul class=\"tasks\">"+g.items.map(function(x){return taskHtml(i,"t-",x,set);}).join("")+"</ul></div>";
+      });
+      h+="</section>";
+    } else {
+      var tv=N.targets.v;
+      h+="<section class=\"panel food\" role=\"tabpanel\"><h2 class=\"session-title\">"+(N.targets.maint?"Maintenance day":N.dt==="hard"?"Hard training day":N.dt==="moderate"?"Moderate day":"Rest day")+"</h2><p class=\"session-meta\">Daily targets</p>";
+      h+="<div class=\"targets\"><div class=\"t-box\"><b>"+tv[0]+"</b><span>calories</span></div><div class=\"t-box\"><b>"+tv[1]+"</b><span>protein g</span></div><div class=\"t-box\"><b>"+tv[2]+"</b><span>fat g</span></div><div class=\"t-box\"><b>"+tv[3]+"</b><span>carbs g</span></div><div class=\"t-box\"><b>"+tv[4]+"</b><span>fiber g</span></div></div>";
+      if(N.targets.maint) h+="<p class=\"session-meta\">Reach maintenance by adding carbs: a bigger starch portion at lunch and dinner and an extra fruit.</p>";
+      N.groups.forEach(function(g){
+        h+="<div class=\"group\"><h3>"+g.h+(g.s?"<small>"+g.s+"</small>":"")+"</h3><ul class=\"tasks\">"+g.items.map(function(x){return taskHtml(i,"n-",x,set);}).join("")+"</ul></div>";
+      });
+      h+="</section>";
+    }
+    h+="<p class=\"foot\">Check-offs are saved in this browser on this device. <a href=\""+PLAN_URL+"\" target=\"_blank\" rel=\"noopener\">Open the full plan</a> for recipes, grocery lists, and testing tables.</p>";
+    app.innerHTML=h;
+    document.getElementById("todayBtn").disabled=(cur===clamp(todayI));
+  }
+
+  app.addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    if(b.hasAttribute("data-task")){toggle(cur,b.getAttribute("data-task"));render();return;}
+    if(b.hasAttribute("data-expand")){var ek=key(cur)+"|"+b.getAttribute("data-expand");open[ek]=!open[ek];var det=b.parentNode.querySelector(".detail");if(det){det.hidden=!open[ek];b.setAttribute("aria-expanded",String(!!open[ek]));}return;}
+    if(b.hasAttribute("data-day")){cur=clamp(+b.getAttribute("data-day"));render();return;}
+    if(b.hasAttribute("data-week")){var wk=+b.getAttribute("data-week");if(wk<1||wk>21)return;var dw=dowOf(cur);cur=clamp((wk-1)*7+dw);render();return;}
+    if(b.hasAttribute("data-tab")){ui.tab=b.getAttribute("data-tab");try{localStorage.setItem("rts-tab",ui.tab);}catch(err){}render();return;}
+  });
+  document.getElementById("todayBtn").addEventListener("click",function(){cur=clamp(indexOf(new Date()));render();window.scrollTo(0,0);});
+  render();
+})();
+</script>
+</body>
+</html>
