@@ -362,14 +362,15 @@ var GROC={
 
   /* ---------- training content ---------- */
   var POSTURE=[
-    ["90/90 breathing","5 slow breaths × 3","Feet on the wall, hips and knees at 90°. Tuck your pelvis so your low back is flat. Inhale through your nose, then exhale fully so your ribs drop."],
-    ["Half-kneeling hip flexor stretch","2 × 45 s each side","Tuck your pelvis and squeeze the back glute, then shift your hips slightly forward. Feel it in the front of the back hip."],
-    ["Kneeling heel sit","2 × 60 s","Pillow between your heels and butt. Sit back until your quads stretch, and thin the pillow every 1–2 weeks. Stop if the knee pinches."],
-    ["Prone heel-to-butt with strap","2 × 8 slow reps each side","Lie face down with your hips pressed into the floor and use the strap to pull your heel toward your glute. Keep your hips flat."],
-    ["Knee-to-wall ankle mobility","2 × 10 each side","Toes a few inches from the wall. Drive your knee over your toes to touch the wall while the heel stays flat. Move the foot back as you improve."],
-    ["Banded psoas march","2 × 8 each side, 3 s hold","Band around both feet. Stand tall with ribs down, drive the knee above hip height, hold, and lower slowly."],
-    ["Thoracic extension on the foam roller","2 × 8","Roller under your mid-back, hands behind your head, hips down. Arch back over the roller, then shift up an inch and repeat."],
-    ["Dead bug","2 × 6 each side","Arms up and knees over hips with your low back pressed into the floor. Reach the opposite arm and leg, then return slowly."]
+    ["90/90 breathing with a pelvic tuck","5 slow breaths × 3","Lie on your back with your feet flat on a wall, hips and knees at 90°. Gently curl your tailbone up so your low back flattens. Breathe in through your nose, then exhale fully so your ribs drop. This resets your pelvis before you stretch."],
+    ["Foam roll quads, outer hips, and shins","45–60 s per spot, each side","Face down on the roller, slowly roll the front of each thigh, then the outer hip just below the hip bone. Then kneel and roll the outside of each shin with the roller or a ball. Pause on tight spots. It should feel uncomfortable, not painful."],
+    ["Half-kneeling hip flexor stretch with side reach","2 × 45 s each side","Put a pad under the back knee. Tuck your pelvis and squeeze the back glute hard before you lean forward, so you feel it in the front of the hip, not your low back. Then reach the arm on the kneeling side up and over toward the other side. That stretches the side of your trunk, which helps with the hip hike."],
+    ["Side-lying quad stretch with strap","2 × 45 s each side","Lie on your side and hug your bottom knee to your chest. That locks your pelvis and protects your back. Loop a strap around your top ankle, push that hip forward, and gently pull your heel toward your glute only until you feel the front of the thigh. This stretches the quad without forcing a deep knee bend.",[6,"If it feels easy now, progress to the couch stretch with a pad under your knee and your back foot on a low step."]],
+    ["Standing shin stretch","2 × 30 s each side","Hold a wall for balance. Set the top of one foot on the floor behind you with the toes pointed back, then gently bend your front knee until you feel the front of that shin. Keep it gentle."],
+    ["Quadruped rock-backs","2 × 10 slow reps","On hands and knees with a pillow under your knees, keep your back flat and slowly rock your hips back toward your heels only as far as you feel a mild stretch, then return. Go a little deeper each week. A pulling feeling around the knee is fine; sharp or pinching pain is not."],
+    ["Hamstring bridge with pelvic tuck","2 × 10, 3 s hold at the top","Lie on your back with your heels a little farther from your hips than a normal bridge. Tuck your pelvis, dig your heels down and pull them toward you, then lift. You should feel your hamstrings and glutes, not your low back."],
+    ["Side-lying hip abduction","2 × 12 each side","Lie on your side with the bottom knee bent. Keep the top leg straight, toes pointing forward, and slightly behind your body. Lift it about a foot, pause, and lower slowly. This trains the side glute that keeps your pelvis level when you walk."],
+    ["Dead bug","2 × 6 each side","Arms up and knees over hips with your low back pressed into the floor. Slowly reach the opposite arm and leg out, keeping your back flat, then return."]
   ];
   var LOWER_A=[
     ["Power",null,"Box jump 3×3","Hang power clean 4×3","Hang power clean 3×2"],
@@ -403,7 +404,7 @@ var GROC={
   }
   var RPE={1:"Lifts at RPE 6–7. Leave 3–4 reps in the tank.",2:"Lifts at RPE 7–8.",3:"Main lifts at RPE 8; everything else RPE 7–8.",4:"Lifts at RPE 7–8 with lower volume while soccer volume rises."};
   var OVERLOAD="When you hit the top of the rep range on every set, add weight next session: 5 lb on lower-body lifts, 2.5–5 lb on upper-body lifts. Log every session so you know what to beat.";
-  var WARMUP="<ol><li><b>Raise:</b> 3–4 min easy bike or jog.</li><li><b>Mobilize:</b> hip flexor stretch, heel sit, and knee-to-wall, shortened.</li><li><b>Activate:</b> glute bridge ×10, banded psoas march ×6 each side, Copenhagen plank ×10 s each side, pogos ×20.</li><li><b>Dynamic:</b> walking lunge with reach, lateral shuffle, carioca, A-skip, then 2 × 20 yd build-ups at 60–80%.</li></ol><p>On lifting days, follow with ramp-up sets of your first lift.</p>";
+  var WARMUP="<ol><li><b>Raise:</b> 3–4 min easy bike or jog.</li><li><b>Mobilize:</b> half-kneeling hip flexor stretch, side-lying quad stretch, and knee-to-wall ankle mobility, shortened.</li><li><b>Activate:</b> glute bridge ×10, banded psoas march ×6 each side, Copenhagen plank ×10 s each side, pogos ×20.</li><li><b>Dynamic:</b> walking lunge with reach, lateral shuffle, carioca, A-skip, then 2 × 20 yd build-ups at 60–80%.</li></ol><p>On lifting days, follow with ramp-up sets of your first lift.</p>";
   var ZONE2="Easy, conversational pace: about 110–130 bpm, breathing through your nose. If your heart rate climbs above 130, slow down or walk until it drops.";
   var READY="<p>Rate leg soreness (0–10) and sleep (0–10), and take your resting heart rate before getting up.</p><ul><li><b>Soreness 6+ or it changes how you walk:</b> switch running to the bike, cut lifting sets in half, and skip plyos and sprints.</li><li><b>Resting HR 7+ above your weekly average, or under 6 hours of sleep:</b> do 75% of the session, or swap it for Zone 2 plus the posture routine.</li><li><b>Sharp or one-sided pain</b> (Achilles, hamstring, groin, knee): stop that movement, train around it for 48–72 hours, and see a PT or athletic trainer if it isn’t better.</li><li><b>Feeling great and wanting more:</b> don’t. Bank it. Weeks 3–8 are when returning players get hurt most.</li></ul>";
 
@@ -463,7 +464,7 @@ var GROC={
     var morning=[
       {id:"weigh",t:"Weigh in",m:"After the bathroom, before eating. Same scale, Standard mode.",x:"Track the 7-day average, not single readings."},
       {id:"ready",t:"Readiness check",m:"Soreness, sleep, resting heart rate",x:READY},
-      {id:"posture",t:"Posture and mobility routine",m:"8 moves, about 15 minutes",x:"<ol>"+POSTURE.map(function(r,k){var extra=(k===1&&w>=4)?" Progress to the couch stretch.":"";return "<li><b>"+r[0]+"</b>, "+r[1]+". "+r[2]+extra+"</li>";}).join("")+"</ol>"}
+      {id:"posture",t:"Posture and mobility routine",m:"9 moves, about 18 minutes",x:"<ol>"+POSTURE.map(function(r,k){var extra=(r[3]&&w>=r[3][0])?" "+r[3][1]:"";return "<li><b>"+r[0]+"</b>, "+r[1]+". "+r[2]+extra+"</li>";}).join("")+"</ol><p><b>Walking cue:</b> to stop the hip hike, think “knee forward, heel up behind” as each leg swings through, and keep your belt line level. Your pelvis shouldn’t rise on the side of the swinging leg.</p>"}
     ];
     G.push({h:"Morning",s:"Every day",items:morning});
 
